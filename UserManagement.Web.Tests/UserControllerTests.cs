@@ -340,7 +340,7 @@ public class UserControllerTests
     }
 
 
-    private User[] SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateOnly dateOfBirth = new DateOnly(), bool isActive = true)
+    private User[] SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateTime dateOfBirth = new DateTime(), bool isActive = true)
     {
         var users = new[]
         {
