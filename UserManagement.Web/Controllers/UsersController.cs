@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Web.Models.Users;
 
@@ -60,5 +62,71 @@ public class UsersController : Controller
 
 
         return View(model);
+    }
+
+    [HttpGet("{id}")]
+    public ViewResult ViewUser(int id)
+    {
+        User? user = _userService.GetById(id);
+        if (user == null)
+        {
+            return View("Error");
+        }
+        return View(user);
+    }
+
+    [Route("CreateUser")]
+    public ViewResult CreateUser()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public IActionResult Create(User user)
+    {
+        //Assume that a newly created user is active
+        user.IsActive = true;
+        var result = _userService.CreateUser(user);
+        
+        return RedirectToAction(nameof(List));
+    }
+
+    [Route("EditUser")]
+    public ViewResult EditUser(int id)
+    {
+        User? user = _userService.GetById(id);
+        if (user == null)
+        {
+            return View("Error");
+        }
+        return View(user);
+    }
+
+    [Route("Edit")]
+    [HttpPut("{id}")]
+    public IActionResult Edit(int id, User user)
+    {
+        var result = _userService.UpdateUser(user);
+
+        return RedirectToAction(nameof(List));
+    }
+
+    [Route("DeleteUser")]
+    public ViewResult DeleteUser(int id)
+    {
+        User? user = _userService.GetById(id);
+        if (user == null)
+        {
+            return View("Error");
+        }
+        return View(user);
+    }
+
+    [Route("Delete")]
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        _userService.DeleteUser(id);
+        return RedirectToAction(nameof(List));
     }
 }

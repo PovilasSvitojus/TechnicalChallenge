@@ -1,0 +1,40 @@
+﻿@model UserManagement.Models.User
+
+<h2>User Details</h2>
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th width="25%"></th>
+				<th style="width: 1px;"></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Forename</th>
+				<th>@Model.Forename</th>
+			</tr>
+			<tr>
+				<th>Last Name</th>
+				<th>@Model.Surname</th>
+			</tr>
+			<tr>
+				<th>Email</th>
+				<th>@Model.Email</th>
+			</tr>
+			<tr>
+				<th>Date Of Birth</th>
+				<th>@Model.DateOfBirth.ToString("dd/MMM/yyyy")</th>
+			</tr>
+			<tr>
+				<th>Is Active?</th>
+				<th>@(Model.IsActive ? "Yes" : "No")</th>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<div>
+	<br />
+	<a asp-action="List">Back to User List</a>
+</div>

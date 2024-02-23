@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using NuGet.ContentModel;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Web.Models.Users;
@@ -105,6 +107,237 @@ public class UserControllerTests
             .And.BeEquivalentTo(inactiveUsers);
     }
 
+    [Fact]
+    public void ViewUser_WhenCalledWithId0_CallsUserServiceGetByIdMethodWithId0()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.ViewUser(0);
+
+        //Assert
+        _userService.Verify(s => s.GetById(0), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void ViewUser_WhenCalledWithId0_ReturnsUserWithId0()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+        _userService.Setup(s => s.GetById(0)).Returns(users[0]);
+
+        //Act
+        var result = controller.ViewUser(0);
+
+        //Assert
+        result.Model.Should().BeOfType<User>()
+            .Which.Id.Should().Be(0);
+    }
+
+    [Fact]
+    public void ViewUser_WhenCalledWithId2_ReturnsNullAndDirectsToErrorView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.ViewUser(2);
+
+        //Assert
+        result.Model.Should().BeNull();
+        result.ViewName.Should().Be("Error");
+    }
+
+    [Fact]
+    public void CreateUser_WhenCalled_ReturnsCreateUserView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.CreateUser();
+
+        //Assert
+        //Null ViewName points to the view with the same name as the function.
+        result.ViewName.Should().BeNull();
+    }
+
+    [Fact]
+    public void Create_WhenCalledWithAUser_CallsUserServiceCreateUserMethod()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.Create(users[0]);
+
+        //Assert
+        _userService.Verify(s => s.CreateUser(users[0]), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void Create_WhenCalledWithAUser_RedirectsToTheListView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = (RedirectToActionResult)controller.Create(users[0]);
+
+        //Assert
+        result.ActionName.Should().Be("List");
+    }
+
+    [Fact]
+    public void EditUser_WhenCalledWithId0_CallsUserServiceGetByIdMethodWithId0()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.EditUser(0);
+
+        //Assert
+        _userService.Verify(s => s.GetById(0), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void EditUser_WhenCalledWithId0_PassesUserWithId0ToTheView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+        _userService.Setup(s => s.GetById(0)).Returns(users[0]);
+
+        //Act
+        var result = controller.EditUser(0);
+
+        //Assert
+        result.Model.Should().BeOfType<User>()
+            .Which.Id.Should().Be(0);
+    }
+
+    [Fact]
+    public void EditUser_WhenCalledWithId2_ReturnsDirectsToErrorView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.EditUser(2);
+
+        //Assert
+        result.ViewName.Should().Be("Error");
+    }
+
+    [Fact]
+    public void Edit_WhenCalledWithId0AndAUser_CallsUserServiceUpdateUserMethod()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.Edit(0, users[0]);
+
+        //Assert
+        _userService.Verify(s => s.UpdateUser(users[0]), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void Edit_WhenCalledWithAUser_RedirectsToTheListView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = (RedirectToActionResult)controller.Edit(0, users[0]);
+
+        //Assert
+        result.ActionName.Should().Be("List");
+    }
+
+    [Fact]
+    public void DeleteUser_WhenCalledWithId0_CallsUserServiceGetByIdMethodWithId0()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.DeleteUser(0);
+
+        //Assert
+        _userService.Verify(s => s.GetById(0), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void DeleteUser_WhenCalledWithId0_PassesUserWithId0ToTheView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+        _userService.Setup(s => s.GetById(0)).Returns(users[0]);
+
+        //Act
+        var result = controller.DeleteUser(0);
+
+        //Assert
+        result.Model.Should().BeOfType<User>()
+            .Which.Id.Should().Be(0);
+    }
+
+    [Fact]
+    public void DeleteUser_WhenCalledWithId2_ReturnsDirectsToErrorView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.DeleteUser(2);
+
+        //Assert
+        result.ViewName.Should().Be("Error");
+    }
+
+    [Fact]
+    public void Delete_WhenCalledWithId0_CallsUserServiceDeleteUserMethod()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.Delete(0);
+
+        //Assert
+        _userService.Verify(s => s.DeleteUser(0), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void Delete_WhenCalledWithId0_RedirectsToTheListView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = (RedirectToActionResult)controller.Delete(0);
+
+        //Assert
+        result.ActionName.Should().Be("List");
+    }
 
 
     private User[] SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateOnly dateOfBirth = new DateOnly(), bool isActive = true)

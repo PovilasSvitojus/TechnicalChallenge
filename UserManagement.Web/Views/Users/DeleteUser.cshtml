@@ -1,0 +1,48 @@
+﻿@model UserManagement.Models.User
+
+<h2>Are you sure you want to delete this User?</h2>
+<hr />
+
+<div>
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="25%">User Details</th>
+					<th style="width: 1px;"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<th>Forename</th>
+					<th>@Model.Forename</th>
+				</tr>
+				<tr>
+					<th>Last Name</th>
+					<th>@Model.Surname</th>
+				</tr>
+				<tr>
+					<th>Email</th>
+					<th>@Model.Email</th>
+				</tr>
+				<tr>
+					<th>Date Of Birth</th>
+					<th>@Model.DateOfBirth.ToString("dd/MMM/yyyy")</th>
+				</tr>
+				<tr>
+					<th>Is Active?</th>
+					<th>@(Model.IsActive ? "Yes" : "No")</th>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+	<form asp-action="Delete" asp-route-id="@Model.Id">
+		<input type="submit" value="Delete" class="btn btn-danger" /> 
+	</form>
+</div>
+
+<div>
+	<br />
+	<a asp-action="List">Back to User List</a>
+</div>

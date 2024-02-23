@@ -1,0 +1,61 @@
+﻿@model UserManagement.Models.User
+
+<h2>Edit User Details</h2>
+<hr />
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit" asp-route-id="@Model.Id">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<div class="form-group">
+				<label asp-for="Id" class="control-label"></label>
+				<input asp-for="Id" class="form-control" value="@Model.Id" readonly />
+			</div>
+			<br />
+			<div class="form-group">
+				<label asp-for="Forename" class="control-label"></label>
+				<input asp-for="Forename" class="form-control" value="@Model.Forename" />
+				<span asp-validation-for="Forename" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group">
+				<label asp-for="Surname" class="control-label"></label>
+				<input asp-for="Surname" class="form-control" value="@Model.Surname" />
+				<span asp-validation-for="Surname" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group">
+				<label asp-for="Email" class="control-label"></label>
+				<input asp-for="Email" class="form-control" type="email" value="@Model.Email" />
+				<span asp-validation-for="Email" class="text-danger"></span>
+			</div>
+			<br />
+			<div class="form-group">
+				<label asp-for="DateOfBirth" class="control-label">Date Of Birth</label>
+				<input asp-for="DateOfBirth" class="form-control" type="date" value="@Model.DateOfBirth" />
+				<span asp-validation-for="DateOfBirth" class="text-danger"></span>
+			</div>
+			</br>
+			<div class="form-group">
+				@Html.Label("Is The User Active?")
+				@Html.CheckBoxFor(m =>  m.IsActive)
+			</div>
+
+			<br />
+			<div class="form-group">
+				<input type="submit" value="Update" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<br />
+	<a asp-action="List">Back to User List</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

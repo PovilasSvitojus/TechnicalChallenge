@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Implementations;
+using UserManagement.Services.Domain.Interfaces;
 
 namespace UserManagement.Data.Tests;
 
@@ -107,6 +108,144 @@ public class UserServiceTests
 
         //Assert
         result.Should().Equal(users);
+    }
+
+    [Fact]
+    public void GetById_WhenCalledWith0_ReturnsAUserObjectWithId0()
+    {
+        //Arrange
+        var service = CreateService();
+        var users = SetupUsers();
+
+        //Act
+        var result = service.GetById(0);
+
+        //Assert
+        result.Should().BeOfType<User>()
+            .And.NotBeNull()
+            .And.Be(users.ElementAt(0));
+    }
+
+    [Fact]
+    public void GetById_WhenCalledWith2_ReturnsNull()
+    {
+        //Arrange
+        var service = CreateService();
+        var users = SetupUsers();
+
+        //Act
+        var result = service.GetById(2);
+
+        //Assert
+        result.Should().BeNull();
+    }
+
+    [Fact]
+    public void CreateUser_WhenCalledWithAUser_CallDataContextCreateMethodWithThatUser()
+    {
+        //Arrange
+        var service = CreateService();
+        var users = SetupUsers();
+
+        User newUser = new User
+        {
+            Forename = "test",
+            Surname = "test",
+            Email = "test@test.com",
+            DateOfBirth = new DateOnly(),
+            IsActive = true
+        };
+
+        //Act
+        var result = service.CreateUser(newUser);
+
+        //Assert
+        _dataContext.Verify(s => s.Create<User>(newUser), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void CreateUser_WhenCalledWithAUser_ReturnsTheSameUser()
+    {
+        //Arrange
+        var service = CreateService();
+        var users = SetupUsers();
+
+        User newUser = new User
+        {
+            Forename = "test",
+            Surname = "test",
+            Email = "test@test.com",
+            DateOfBirth = new DateOnly(),
+            IsActive = true
+        };
+
+        //Act
+        var result = service.CreateUser(newUser);
+
+        //Assert
+        result.Should().BeSameAs(newUser);
+    }
+
+    [Fact]
+    public void UpdateUser_WhenCalledWithAUser_CallDataContextUpdateMethodWithThatUser()
+    {
+        //Arrange
+        var service = CreateService();
+        var users = SetupUsers();
+
+        User updUser = new User
+        {
+            Id = 0,
+            Forename = "test",
+            Surname = "test",
+            Email = "test@test.com",
+            DateOfBirth = new DateOnly(),
+            IsActive = true
+        };
+
+        //Act
+        var result = service.UpdateUser(updUser);
+
+        //Assert
+        _dataContext.Verify(s => s.Update<User>(updUser), Times.Exactly(1));
+    }
+
+    [Fact]
+    public void UpdateUser_WhenCalledWithAUser_ReturnsTheSameUser()
+    {
+        //Arrange
+        var service = CreateService();
+        var users = SetupUsers();
+
+        User updUser = new User
+        {
+            Id = 0,
+            Forename = "test",
+            Surname = "test",
+            Email = "test@test.com",
+            DateOfBirth = new DateOnly(),
+            IsActive = true
+        };
+
+        //Act
+        var result = service.UpdateUser(updUser);
+
+        //Assert
+        result.Should().BeSameAs(updUser);
+    }
+
+    [Fact]
+    public void DeleteUser_WhenCalledWithId0_CallsDataContextDeleteMethodWithId0()
+    {
+        //Arrange
+        var service = CreateService();
+        var users = SetupUsers();
+
+        //Act
+        service.DeleteUser(0);
+
+        //Assert
+        _dataContext.Verify(s => s.Delete<User>(users.ElementAt(0)), Times.Exactly(1));  
     }
 
     private IQueryable<User> SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateOnly dateOfBirth = new DateOnly(), bool isActive = true)
