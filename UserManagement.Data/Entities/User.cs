@@ -21,6 +21,7 @@ public class User
     public string Email { get; set; } = default!;
     [Required]
     [DataType(DataType.Date)]
-    public DateOnly DateOfBirth { get; set; }
+    [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}")]
+    public DateTime DateOfBirth { get; set; }
     public bool IsActive { get; set; }
 }

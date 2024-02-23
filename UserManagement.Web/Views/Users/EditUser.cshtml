@@ -31,8 +31,9 @@
 			</div>
 			<br />
 			<div class="form-group">
-				<label asp-for="DateOfBirth" class="control-label">Date Of Birth</label>
-				<input asp-for="DateOfBirth" class="form-control" type="date" value="@Model.DateOfBirth" />
+ 				<label asp-for="DateOfBirth" class="control-label">Date Of Birth</label>
+				@*@<input asp-for="@Model.DateOfBirth" class="form-control" type="date" asp-format="{0:s}" value="@Model.DateOfBirth" /> *@
+				@Html.EditorFor(m => m.DateOfBirth, "{0:s}", new { type = "datetime-local", htmlAttributes = new { @class = "form-control" } } )
 				<span asp-validation-for="DateOfBirth" class="text-danger"></span>
 			</div>
 			</br>

@@ -152,7 +152,7 @@ public class UserServiceTests
             Forename = "test",
             Surname = "test",
             Email = "test@test.com",
-            DateOfBirth = new DateOnly(),
+            DateOfBirth = new DateTime(),
             IsActive = true
         };
 
@@ -175,7 +175,7 @@ public class UserServiceTests
             Forename = "test",
             Surname = "test",
             Email = "test@test.com",
-            DateOfBirth = new DateOnly(),
+            DateOfBirth = new DateTime(),
             IsActive = true
         };
 
@@ -199,7 +199,7 @@ public class UserServiceTests
             Forename = "test",
             Surname = "test",
             Email = "test@test.com",
-            DateOfBirth = new DateOnly(),
+            DateOfBirth = new DateTime(),
             IsActive = true
         };
 
@@ -223,7 +223,7 @@ public class UserServiceTests
             Forename = "test",
             Surname = "test",
             Email = "test@test.com",
-            DateOfBirth = new DateOnly(),
+            DateOfBirth = new DateTime(),
             IsActive = true
         };
 
@@ -248,7 +248,7 @@ public class UserServiceTests
         _dataContext.Verify(s => s.Delete<User>(users.ElementAt(0)), Times.Exactly(1));  
     }
 
-    private IQueryable<User> SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateOnly dateOfBirth = new DateOnly(), bool isActive = true)
+    private IQueryable<User> SetupUsers(string forename = "Johnny", string surname = "User", string email = "juser@example.com", DateTime dateOfBirth = new DateTime(), bool isActive = true)
     {
         var users = new[]
         {
