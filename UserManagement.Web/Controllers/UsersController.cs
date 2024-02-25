@@ -1,16 +1,26 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
 using UserManagement.Web.Models.Users;
+using log4net.Core;
+using UserManagement.Services.Interfaces;
+
+[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]
 
 namespace UserManagement.WebMS.Controllers;
 
 [Route("users")]
 public class UsersController : Controller
 {
+    private static readonly log4net.ILog logger = log4net.LogManager.GetLogger("UserController");
+
     private readonly IUserService _userService;
-    public UsersController(IUserService userService) => _userService = userService;
+    private readonly ILogService _logService;
+    public UsersController(IUserService userService, ILogService logService)
+    {
+        _userService = userService;
+        _logService = logService;
+    }
 
     [HttpGet]
     public ViewResult List(bool? isActive)
@@ -60,19 +70,36 @@ public class UsersController : Controller
             Items = items.ToList()
         };
 
-
         return View(model);
     }
 
     [HttpGet("{id}")]
     public ViewResult ViewUser(int id)
     {
+        List<LoggingEvent> userLogs = new List<LoggingEvent>();
+
         User? user = _userService.GetById(id);
         if (user == null)
         {
+            //Clear the user property so that it doesn't get assigned to the wrong user
+            log4net.ThreadContext.Properties["user"] = null;
+            logger.Info($"Attempted to view User with id = {id}, which could not be found");
+
             return View("Error");
         }
-        return View(user);
+
+        log4net.ThreadContext.Properties["user"] = user;
+        logger.Info($"User {user.Forename} {user.Surname} was viewed");
+
+        userLogs = _logService.GetUserLog(id);
+
+        var model = new UserLogViewModel
+        {
+            User = user,
+            UserEvents = userLogs
+        };
+
+        return View(model);
     }
 
     [Route("CreateUser")]
@@ -87,7 +114,10 @@ public class UsersController : Controller
         //Assume that a newly created user is active
         user.IsActive = true;
         var result = _userService.CreateUser(user);
-        
+
+        log4net.ThreadContext.Properties["user"] = user;
+        logger.Info($"User {user.Forename} {user.Surname} was created");
+
         return RedirectToAction(nameof(List));
     }
 
@@ -97,6 +127,10 @@ public class UsersController : Controller
         User? user = _userService.GetById(id);
         if (user == null)
         {
+            //Clear the user property so that it doesn't get assigned to the wrong user
+            log4net.ThreadContext.Properties["user"] = null;
+            logger.Info($"Attempted to update User with id = {id}, which could not be found");
+
             return View("Error");
         }
         return View(user);
@@ -108,6 +142,9 @@ public class UsersController : Controller
     {
         var result = _userService.UpdateUser(user);
 
+        log4net.ThreadContext.Properties["user"] = user;
+        logger.Info($"User {user.Forename} {user.Surname} was updated");
+
         return RedirectToAction(nameof(List));
     }
 
@@ -117,6 +154,10 @@ public class UsersController : Controller
         User? user = _userService.GetById(id);
         if (user == null)
         {
+            //Clear the user property so that it doesn't get assigned to the wrong user
+            log4net.ThreadContext.Properties["user"] = null;
+            logger.Info($"Attempted to delete User with id = {id}, which could not be found");
+
             return View("Error");
         }
         return View(user);
@@ -126,7 +167,21 @@ public class UsersController : Controller
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
+        User? user = _userService.GetById(id);
+        if (user == null)
+        {
+            //Clear the user property so that it doesn't get assigned to the wrong user
+            log4net.ThreadContext.Properties["user"] = null;
+            logger.Info($"Attempted to delete User with id = {id}, which could not be found");
+
+            return View("Error");
+        }
+
         _userService.DeleteUser(id);
+
+        log4net.ThreadContext.Properties["user"] = user;
+        logger.Info($"User {user.Forename} {user.Surname} was deleted");
+
         return RedirectToAction(nameof(List));
     }
 }

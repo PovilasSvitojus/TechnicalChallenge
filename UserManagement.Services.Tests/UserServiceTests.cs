@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Implementations;
-using UserManagement.Services.Domain.Interfaces;
 
 namespace UserManagement.Data.Tests;
 

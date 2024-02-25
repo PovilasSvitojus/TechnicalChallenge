@@ -1,4 +1,4 @@
-﻿@model UserManagement.Models.User
+﻿@model UserManagement.Web.Models.Users.UserLogViewModel
 
 <h2>User Details</h2>
 <div class="table-responsive">
@@ -11,28 +11,53 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th>Forename</th>
-				<th>@Model.Forename</th>
+				<td>Forename:</td>
+				<td>@Model.User.Forename</td>
 			</tr>
 			<tr>
-				<th>Last Name</th>
-				<th>@Model.Surname</th>
+				<td>Last Name:</td>
+				<td>@Model.User.Surname</td>
 			</tr>
 			<tr>
-				<th>Email</th>
-				<th>@Model.Email</th>
+				<td>Email:</td>
+				<td>@Model.User.Email</td>
 			</tr>
 			<tr>
-				<th>Date Of Birth</th>
-				<th>@Model.DateOfBirth.ToString("dd/MMM/yyyy")</th>
+				<td>Date Of Birth:</td>
+				<td>@Model.User.DateOfBirth.ToString("dd/MMM/yyyy")</td>
 			</tr>
 			<tr>
-				<th>Is Active?</th>
-				<th>@(Model.IsActive ? "Yes" : "No")</th>
+				<td>Is Active?</td>
+				<td>@(Model.User.IsActive ? "Yes" : "No")</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
+
+<br />
+
+<h2>User Log</h2>
+
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th width="25%">Timestamp</th>
+				<th>Message</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model.UserEvents)
+			{
+				<tr>
+					<td> @item.TimeStamp </td>
+					<td> @item.RenderedMessage </td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
 
 <div>
 	<br />

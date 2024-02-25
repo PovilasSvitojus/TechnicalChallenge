@@ -1,0 +1,73 @@
+﻿@model log4net.Core.LoggingEvent
+
+<h2>Log Details</h2>
+
+<div class="table-responsive">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th width="30%">Timestamp</th>
+				<th>Message</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td> @Model.TimeStamp </td>
+				<td> @Model.RenderedMessage </td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+@if (Model.LookupProperty("user") == null)
+{
+	<div>
+		<h4>With no further user details. </h4>
+	</div>
+}
+
+
+@if (Model.LookupProperty("user") != null)
+{
+	UserManagement.Models.User user = (UserManagement.Models.User)Model.LookupProperty("user");
+	<div>
+		<h4>With the following user details: </h4>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="25%"></th>
+					<th style="width: 1px;"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Forename:</td>
+					<td>@user.Forename</td>
+				</tr>
+				<tr>
+					<td>Last Name:</td>
+					<td>@user.Surname</td>
+				</tr>
+				<tr>
+					<td>Email:</td>
+					<td>@user.Email</td>
+				</tr>
+				<tr>
+					<td>Date Of Birth:</td>
+					<td>@user.DateOfBirth.ToString("dd/MMM/yyyy")</td>
+				</tr>
+				<tr>
+					<td>Is Active?</td>
+					<td>@(user.IsActive ? "Yes" : "No")</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+}
+
+<div>
+	<br />
+	<a asp-action="List">Back to Log List</a>
+</div>

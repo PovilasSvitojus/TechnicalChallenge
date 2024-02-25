@@ -1,0 +1,37 @@
+﻿@model List<log4net.Core.LoggingEvent>
+
+<h2>Logs</h2>
+
+@if (Model.Count == 0)
+{
+	<h2 style="color:palevioletred">No Logs recorded yet.</h2>
+}
+
+@if(Model.Count > 0)
+{
+	<div class="table-responsive">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th width="30%">Timestamp</th>
+					<th>Message</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@{int count = 0;}
+				@foreach (var item in Model)
+				{
+					<tr>
+						<td> @item.TimeStamp </td>
+						<td> @item.RenderedMessage </td>
+						<td> <a asp-controller="Logs" asp-action="ViewLog" asp-route-id="@count">More... </a> </td>
+					</tr>
+					count++;
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+

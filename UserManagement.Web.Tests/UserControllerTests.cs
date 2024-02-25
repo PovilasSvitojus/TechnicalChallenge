@@ -1,9 +1,9 @@
 using System;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
-using NuGet.ContentModel;
 using UserManagement.Models;
 using UserManagement.Services.Domain.Interfaces;
+using UserManagement.Services.Interfaces;
 using UserManagement.Web.Models.Users;
 using UserManagement.WebMS.Controllers;
 
@@ -133,8 +133,8 @@ public class UserControllerTests
         var result = controller.ViewUser(0);
 
         //Assert
-        result.Model.Should().BeOfType<User>()
-            .Which.Id.Should().Be(0);
+        result.Model.Should().BeOfType<UserLogViewModel>()
+            .Which.User.Id.Should().Be(0);
     }
 
     [Fact]
@@ -317,6 +317,7 @@ public class UserControllerTests
         // Arrange
         var controller = CreateController();
         var users = SetupUsers();
+        _userService.Setup(s => s.GetById(0)).Returns(users[0]);
 
         //Act
         var result = controller.Delete(0);
@@ -331,12 +332,27 @@ public class UserControllerTests
         // Arrange
         var controller = CreateController();
         var users = SetupUsers();
+        _userService.Setup(s => s.GetById(0)).Returns(users[0]);
 
         //Act
         var result = (RedirectToActionResult)controller.Delete(0);
 
         //Assert
         result.ActionName.Should().Be("List");
+    }
+
+    [Fact]
+    public void Delete_WhenCalledWithId2_ReturnsDirectsToErrorView()
+    {
+        // Arrange
+        var controller = CreateController();
+        var users = SetupUsers();
+
+        //Act
+        var result = controller.DeleteUser(2);
+
+        //Assert
+        result.ViewName.Should().Be("Error");
     }
 
 
@@ -376,5 +392,6 @@ public class UserControllerTests
     }
 
     private readonly Mock<IUserService> _userService = new();
-    private UsersController CreateController() => new(_userService.Object);
+    private readonly Mock<ILogService> _logService = new();
+    private UsersController CreateController() => new(_userService.Object, _logService.Object);
 }
