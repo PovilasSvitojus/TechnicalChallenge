@@ -1,31 +1,83 @@
-﻿@model List<log4net.Core.LoggingEvent>
+﻿@model UserManagement.Web.Models.Logs.LogListViewModel
 
 <h2>Logs</h2>
 
-@if (Model.Count == 0)
+@{
+DateTime? dateFrom = null;
+DateTime? dateTo = null;
+}
+<form asp-action="List" method="get" asp-route-dateFrom="@dateFrom" asp-route-dateTo="@dateTo">
+	<div class ="table-responsive">
+		<table class="table">
+			<tbody>
+				<tr>
+					<td width="20%" style="padding-right: 20px;">
+						<div class="form-group">
+							<label for="dateFrom" class="control-label">Date From:</label>
+							<input asp-for="@dateFrom" class="form-control" type="date" asp-format="{0:s}" value="@dateFrom" />
+						</div>
+					</td>
+					<td width="20%" style="padding-right: 20px;">
+						<div class="form-group">
+							<label for="dateTo" class="control-label">Date To:</label>
+							<input asp-for="@dateTo" class="form-control" type="date" asp-format="{0:s}" value="@dateTo" />
+						</div>
+					</td>
+					<td width="20%" style="padding-right: 20px;">
+						<div class="form-group">
+							<label for="userId" class="control-label">Select user:</label>
+							<select name="userId" asp-items="@Model.UserOptions" class="form-control">
+								<option value="null" selected="selected">Select user</option>
+							</select>
+						</div>
+					</td>
+					<td width="20%" style="padding-right: 20px;">
+						<div class="form-group">
+							<label for="severityId" class="control-label">Severity:</label>
+							<select name="severityId" asp-items="@Model.SeverityOptions" class="form-control">
+								<option value="null" selected="selected">Select severity level</option>
+							</select>
+						</div>
+					</td>
+					<td style="vertical-align: bottom">
+						<div class="form-group float-end">		
+							<input type="submit" value="Search" class="btn btn-primary" />
+							<a asp-controller="Logs" asp-action="List" class="btn btn-primary">
+								Reset filters
+							</a>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</form>
+<br />
+
+@if (Model.Events.Count == 0)
 {
-	<h2 style="color:palevioletred">No Logs recorded yet.</h2>
+	<h2 style="color:palevioletred">No Logs found.</h2>
 }
 
-@if(Model.Count > 0)
+@if (Model.Events.Count > 0)
 {
 	<div class="table-responsive">
 		<table class="table table-striped">
 			<thead>
 				<tr>
 					<th width="30%">Timestamp</th>
-					<th>Message</th>
+					<th width="60%">Message</th>
 					<th></th>
 				</tr>
 			</thead>
 			<tbody>
 				@{int count = 0;}
-				@foreach (var item in Model)
+				@foreach (var item in Model.Events)
 				{
 					<tr>
-						<td> @item.TimeStamp </td>
-						<td> @item.RenderedMessage </td>
-						<td> <a asp-controller="Logs" asp-action="ViewLog" asp-route-id="@count">More... </a> </td>
+						<td style="vertical-align: middle"> @item.TimeStamp </td>
+						<td style="vertical-align: middle"> @item.RenderedMessage </td>
+						<td> <a asp-controller="Logs" asp-action="ViewLog" asp-route-id="@count" class="btn btn-primary"> More... </a> </td>
 					</tr>
 					count++;
 				}

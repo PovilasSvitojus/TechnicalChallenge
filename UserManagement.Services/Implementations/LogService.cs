@@ -7,7 +7,7 @@ using UserManagement.Services.Interfaces;
 [assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]
 
 namespace UserManagement.Services.Implementations;
-internal class LogService : ILogService
+public class LogService : ILogService
 {
     private static readonly log4net.ILog logger = log4net.LogManager.GetLogger("UserController");
 

@@ -143,7 +143,7 @@ public class UsersController : Controller
         var result = _userService.UpdateUser(user);
 
         log4net.ThreadContext.Properties["user"] = user;
-        logger.Info($"User {user.Forename} {user.Surname} was updated");
+        logger.Debug($"User {user.Forename} {user.Surname} was updated");
 
         return RedirectToAction(nameof(List));
     }

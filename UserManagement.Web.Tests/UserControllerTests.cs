@@ -349,10 +349,14 @@ public class UserControllerTests
         var users = SetupUsers();
 
         //Act
-        var result = controller.DeleteUser(2);
+        var result = controller.Delete(2) as ViewResult;
 
         //Assert
-        result.ViewName.Should().Be("Error");
+        //result.Should().Be("Error");
+        result.Should().BeOfType<ViewResult>()
+            .Which.ViewName.Should().Be("Error");
+        //result.ViewName.Should().Be("Error");
+        //var model = result.ViewData.Model();
     }
 
 
