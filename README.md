@@ -5,6 +5,11 @@ We recommend that you use [Visual Studio (Community Edition)](https://visualstud
 
 **The application uses an in-memory database, so changes will not be persisted between executions.**
 
+## Additional Packages
+### log4net
+I am using log4net for logging. Logger configuration is saved in the `log4net.config` file. For this application `MemoryAppender` was chosen for
+simplicity. Classes where logging is required load the configuration with the line `[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]`.
+
 ## The Exercise
 Complete as many of the tasks below as you can. These are split into 3 levels of difficulty 
 * **Standard** - Functionality that is common when working as a web developer
