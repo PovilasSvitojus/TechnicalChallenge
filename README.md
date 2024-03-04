@@ -6,9 +6,29 @@ We recommend that you use [Visual Studio (Community Edition)](https://visualstud
 **The application uses an in-memory database, so changes will not be persisted between executions.**
 
 ## Additional Packages
-### log4net
-I am using log4net for logging. Logger configuration is saved in the `log4net.config` file. For this application `MemoryAppender` was chosen for
+### Logging
+I am using **log4net** for logging. Version `2.0.15` is installed using Package Manager for `UserManagement.Services` and `UserManagement.Web` projects. 
+Logger configuration is saved in the `log4net.config` file. For this application `MemoryAppender` was chosen for
 simplicity. Classes where logging is required load the configuration with the line `[assembly: log4net.Config.XmlConfigurator(ConfigFile = "log4net.config")]`.
+
+### Database Migrations
+Since the models and the context are already created, code first approach was chosen.  
+The following packages were installed for `UserManagement.Data` project:  
+* Microsoft.EntityFrameworkCore 7.0.5
+* Microsoft.EntityFrameworkCore.SqlServer 7.0.5
+* Microsoft.Extensions.Configuration 7.0.0
+* Microsoft.Extensions.Configuration.Json 7.0.0  
+
+And for `UserManagement.Web` project:
+* Microsoft.EntityFrameworkCore.Design 7.0.5  
+
+The next steps are as follows:  
+* Create the database in Microsoft SQL Server Management Studio (MSSMS)
+* Update `appsettings.json` to include the connection string to the created database
+* Update the `DataContext` `onConfiguring` method to no longer use the in memory database, but instead read the connection string from the `appsettings.json` file and use this string to establish a connection to the database.
+* Open **Package Manager Console** in Visual Studio and make sure it is set to run on the `UserManagement.Data` project
+* Create the first migration by typing `Add-Migration Initial` in the **Package Manager Console**
+* Once the migration has been created successfully push the changes to the database using `Update-Database` command
 
 ## The Exercise
 Complete as many of the tasks below as you can. These are split into 3 levels of difficulty 
